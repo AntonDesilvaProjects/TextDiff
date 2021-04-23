@@ -22,6 +22,6 @@ public class Application {
                 "   }\n" +
                 "}", JSONCompareMode.NON_EXTENSIBLE);
 
-        System.out.print(result);
+        System.out.println("\033[4;30m" + "RED COLORED" );
     }
 }

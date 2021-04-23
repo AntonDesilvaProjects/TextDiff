@@ -1,2 +1,12 @@
+com/jsondiff/loader/DataResponse.java
+ com.jsondiff.loader.DataResponse
+com/jsondiff/loader/DataRequest.java
+ com.jsondiff.loader.DataRequest
+com/jsondiff/loader/http/HttpDataLoader.java
+ com.jsondiff.loader.http.HttpDataLoader
+com/jsondiff/loader/DataLoader.java
+ com.jsondiff.loader.DataLoader
+com/jsondiff/loader/http/HttpDataRequest.java
+ com.jsondiff.loader.http.HttpDataRequest
 com/jsondiff/Application.java
  com.jsondiff.Application
