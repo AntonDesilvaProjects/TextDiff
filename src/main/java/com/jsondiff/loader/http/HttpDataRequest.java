@@ -2,17 +2,33 @@ package com.jsondiff.loader.http;
 
 import com.jsondiff.loader.DataRequest;
 import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 public class HttpDataRequest extends DataRequest {
     enum ContentType {
+
         APPLICATION_JSON("application/json"),
         APPLICATION_XML("application/xml"),
         APPLICATION_FORM_URLENCODED("application/x-www-form-urlencoded");
 
         private String text;
+        public static String CONTENT_TYPE = "Content-Type";
 
         ContentType(String text) {
             this.text = text;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public static ContentType findByText(String text) {
+            return Arrays.stream(ContentType.values())
+                    .filter(contentType -> contentType.getText().equals(text))
+                    .findFirst().orElse(null);
         }
     }
 
@@ -98,6 +114,12 @@ public class HttpDataRequest extends DataRequest {
 
         public HttpDataRequestBuilder withHeaders(MultiValuedMap<String, String> headers) {
             this.headers = headers;
+            return this;
+        }
+
+        public HttpDataRequestBuilder withHeader(String name, String value) {
+            this.headers = Optional.ofNullable(headers).orElse(new HashSetValuedHashMap<>());
+            headers.put(name, value);
             return this;
         }
 
