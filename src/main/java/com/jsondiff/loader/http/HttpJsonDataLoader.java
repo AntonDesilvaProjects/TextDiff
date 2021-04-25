@@ -1,8 +1,7 @@
 package com.jsondiff.loader.http;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jsondiff.loader.DataLoader;
+import com.jsondiff.loader.AbstractDataLoader;
 import com.jsondiff.loader.DataRequest;
 import com.jsondiff.loader.DataResponse;
 import okhttp3.*;
@@ -12,21 +11,16 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
 
-public class HttpJsonDataLoader implements DataLoader {
+public class HttpJsonDataLoader extends AbstractDataLoader {
 
     private final OkHttpClient httpClient = new OkHttpClient();
-    private static final MediaType JSON_MEDIA_TYPE
-            = MediaType.parse(HttpDataRequest.ContentType.APPLICATION_JSON.getText());
-    private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
-
+    private static final MediaType JSON_MEDIA_TYPE = MediaType.parse(HttpDataRequest.ContentType.APPLICATION_JSON.getText());
 
     @Override
     public DataResponse load(DataRequest request) {
-        HttpDataRequest httpRequest = (HttpDataRequest) request;
+        HttpDataRequest httpRequest = getDataRequestAs(request, HttpDataRequest.class);
         JsonNode jsonResponse = executeAndGetResponse(httpRequest);
-        HttpDataResponse response = new HttpDataResponse();
-        response.setData(jsonResponse);
-        return response;
+        return DataResponse.Builder.aDataResponse().withData(jsonResponse).build();
     }
 
     private JsonNode executeAndGetResponse(HttpDataRequest httpDataRequest) {
@@ -34,7 +28,7 @@ public class HttpJsonDataLoader implements DataLoader {
         try {
             Response response = httpClient.newCall(okHttpRequest).execute();
             String rawResponse = response.body().string();
-            return JSON_MAPPER.readTree(rawResponse);
+            return readAsJson(rawResponse);
         } catch (IOException jsonException) {
             throw new RuntimeException(jsonException.getLocalizedMessage());
         }
